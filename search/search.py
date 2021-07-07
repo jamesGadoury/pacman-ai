@@ -89,10 +89,43 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+class Node:
+    def __init__(self, state, parent, actions, pathCost):
+        self.state = state
+        self.parent = parent
+        self.actions = actions # actions to get to this node in sequential order
+        self.pathCost = pathCost
+
+    @staticmethod
+    def initNode(state):
+        return Node(state, None, [], 0)
+
+def successorNodes(problem, parentNode):
+    successors = []
+    for (successor, action, stepCost) in problem.getSuccessors(parentNode.state):
+        successors.append(Node(successor, parentNode.state, parentNode.actions+[action], parentNode.pathCost+stepCost))
+    return successors
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from game import Directions
+
+    node = Node.initNode(problem.getStartState())
+    frontier = util.PriorityQueue()
+    frontier.push(node, node.pathCost)
+    reached = { node.state: node }
+
+    while not frontier.isEmpty():
+        node = frontier.pop()
+
+        if problem.isGoalState(node.state):
+            return node.actions
+        
+        for child in successorNodes(problem, node):
+            s = child.state
+            if s not in reached or child.pathCost < reached[s].pathCost:
+                reached[s] = child
+                frontier.push(child, child.pathCost)
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
