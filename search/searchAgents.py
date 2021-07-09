@@ -68,6 +68,7 @@ class SearchAgent(Agent):
     Options for fn include:
       depthFirstSearch or dfs
       breadthFirstSearch or bfs
+      bestFirstSearch
 
 
     Note: You should NOT change any code in SearchAgent

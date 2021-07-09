@@ -106,10 +106,7 @@ def successorNodes(problem, parentNode):
         successors.append(Node(successor, parentNode.state, parentNode.actions+[action], parentNode.pathCost+stepCost))
     return successors
 
-def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    from game import Directions
-
+def bestFirstSearch(problem):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueue()
     frontier.push(node, node.pathCost)
@@ -126,6 +123,10 @@ def breadthFirstSearch(problem):
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
                 frontier.push(child, child.pathCost)
+
+def breadthFirstSearch(problem):
+    """Search the shallowest nodes in the search tree first."""
+    util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
