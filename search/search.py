@@ -107,7 +107,7 @@ def successorNodes(problem, parentNode):
     return successors
 
 def actionsToNode(node):
-    actions = [ node.action ]
+    actions = [ node.action ] if node.action else []
     parent = node.parent
 
     while parent:
@@ -119,6 +119,8 @@ def actionsToNode(node):
     actions.reverse()
     return actions
 
+# technically this is UTILITY-COST search, which calls bestFirstSearch with
+# a f = PATH-COST
 def bestFirstSearch(problem):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueue()
@@ -136,11 +138,30 @@ def bestFirstSearch(problem):
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
                 frontier.push(child, child.pathCost)
-    return []
+    return [] # failure
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    util.raiseNotDefined()
+    node = Node.initNode(problem.getStartState())
+    if problem.isGoalState(node.state):
+        return actionsToNode(node)
+    
+    frontier = util.Queue() # FIFO
+    frontier.push(node)
+
+    reached = set(node.state)
+
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        for child in successorNodes(problem, node):
+            s = child.state
+            if problem.isGoalState(s):
+                return actionsToNode(child)
+            if s not in reached:
+                reached.add(s)
+                frontier.push(child)
+
+    return [] # failure
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
