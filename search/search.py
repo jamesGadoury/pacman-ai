@@ -114,7 +114,8 @@ def actionsToNode(node):
         if parent.action:
             actions.append(parent.action)
         parent = parent.parent
-
+    # actions is currently a list of actions to get from input node to init node
+    # so we now reverse them to make a list of actions from init node to input node
     actions.reverse()
     return actions
 
