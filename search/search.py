@@ -102,11 +102,15 @@ def actionsToNode(node):
     actions.reverse()
     return actions
 
+def depth(node):
+    return len(actionsToNode(node))
+
 def pathCost(node):
     return node.pathCost
 
-# technically this is UTILITY-COST search, which calls bestFirstSearch with
-# a f = PATH-COST
+def negativeDepth(node):
+    return -1 * depth(node)
+
 def bestFirstSearch(problem, f=pathCost):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueue()
@@ -140,8 +144,7 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return bestFirstSearch(problem, f=negativeDepth)
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
