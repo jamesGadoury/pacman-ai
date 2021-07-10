@@ -170,8 +170,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return bestFirstSearch(problem)
 
 def nullHeuristic(state, problem=None):
     """

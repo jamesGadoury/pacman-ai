@@ -8,4 +8,9 @@ cd search
 python pacman.py -l mediumMaze -p SearchAgent -a fn=bestFirstSearch
 
 python pacman.py -l mediumMaze -p SearchAgent -a fn=breadthFirstSearch
+
+python pacman.py -l bigMaze -z .5 -p SearchAgent
+
+python pacman.py -l mediumScaryMaze -p StayWestSearchAgent
+
 ```
