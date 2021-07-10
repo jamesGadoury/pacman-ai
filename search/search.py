@@ -148,8 +148,7 @@ def breadthFirstSearch(problem):
     
     frontier = util.Queue() # FIFO
     frontier.push(node)
-
-    reached = set(node.state)
+    reached = [node.state] 
 
     while not frontier.isEmpty():
         node = frontier.pop()
@@ -158,7 +157,7 @@ def breadthFirstSearch(problem):
             if problem.isGoalState(s):
                 return actionsToNode(child)
             if s not in reached:
-                reached.add(s)
+                reached.append(s)
                 frontier.push(child)
 
     return [] # failure
