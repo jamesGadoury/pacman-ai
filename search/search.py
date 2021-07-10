@@ -90,21 +90,33 @@ def depthFirstSearch(problem):
     util.raiseNotDefined()
 
 class Node:
-    def __init__(self, state, parent, actions, pathCost):
+    def __init__(self, state, parent, action, pathCost):
         self.state = state
         self.parent = parent
-        self.actions = actions # actions to get to this node in sequential order
+        self.action = action
         self.pathCost = pathCost
 
     @staticmethod
     def initNode(state):
-        return Node(state, None, [], 0)
+        return Node(state, None, None, 0)
 
 def successorNodes(problem, parentNode):
     successors = []
     for (successor, action, stepCost) in problem.getSuccessors(parentNode.state):
-        successors.append(Node(successor, parentNode.state, parentNode.actions+[action], parentNode.pathCost+stepCost))
+        successors.append(Node(successor, parentNode, action, parentNode.pathCost+stepCost))
     return successors
+
+def actionsToNode(node):
+    actions = [ node.action ]
+    parent = node.parent
+
+    while parent:
+        if parent.action:
+            actions.append(parent.action)
+        parent = parent.parent
+
+    actions.reverse()
+    return actions
 
 def bestFirstSearch(problem):
     node = Node.initNode(problem.getStartState())
@@ -116,13 +128,14 @@ def bestFirstSearch(problem):
         node = frontier.pop()
 
         if problem.isGoalState(node.state):
-            return node.actions
+            return actionsToNode(node) 
         
         for child in successorNodes(problem, node):
             s = child.state
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
                 frontier.push(child, child.pathCost)
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
