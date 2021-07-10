@@ -102,12 +102,15 @@ def actionsToNode(node):
     actions.reverse()
     return actions
 
+def pathCost(node):
+    return node.pathCost
+
 # technically this is UTILITY-COST search, which calls bestFirstSearch with
 # a f = PATH-COST
-def bestFirstSearch(problem):
+def bestFirstSearch(problem, f=pathCost):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueue()
-    frontier.push(node, node.pathCost)
+    frontier.push(node, f(node))
     reached = { node.state: node }
 
     while not frontier.isEmpty():
@@ -120,7 +123,7 @@ def bestFirstSearch(problem):
             s = child.state
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
-                frontier.push(child, child.pathCost)
+                frontier.push(child, f(child))
     return [] # failure
 
 def depthFirstSearch(problem):
