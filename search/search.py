@@ -113,8 +113,8 @@ def negativeDepth(node):
 
 def bestFirstSearch(problem, f=pathCost):
     node = Node.initNode(problem.getStartState())
-    frontier = util.PriorityQueue()
-    frontier.push(node, f(node))
+    frontier = util.PriorityQueueWithFunction(f)
+    frontier.push(node)
     reached = { node.state: node }
 
     while not frontier.isEmpty():
@@ -127,7 +127,7 @@ def bestFirstSearch(problem, f=pathCost):
             s = child.state
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
-                frontier.push(child, f(child))
+                frontier.push(child)
     return [] # failure
 
 def depthFirstSearch(problem):
