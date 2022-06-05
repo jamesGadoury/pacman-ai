@@ -440,7 +440,6 @@ def cornersHeuristic(state, problem):
     admissible (as well as consistent).
     """
     corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     score = 0
 
@@ -452,7 +451,6 @@ def cornersHeuristic(state, problem):
         distance = ((x_p - x_c) ** 2 + (y_p - y_c) ** 2) ** 0.5
         score += distance
 
-    "*** YOUR CODE HERE ***"
     return score
 
 
@@ -562,7 +560,15 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    score = 0
+
+    for foodCoords in foodGrid.asList():
+        x_p, y_p = position
+        x_f, y_f = foodCoords
+        distance = ((x_p - x_f) ** 2 + (y_p - y_f) ** 2) ** 0.5
+        score += distance
+
+    return score
 
 
 class ClosestDotSearchAgent(SearchAgent):
