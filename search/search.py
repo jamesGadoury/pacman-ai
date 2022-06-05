@@ -88,12 +88,8 @@ class Node:
 
 
 def successorNodes(problem, parentNode):
-    successors = []
     for (successor, action, stepCost) in problem.getSuccessors(parentNode.state):
-        successors.append(
-            Node(successor, parentNode, action, parentNode.pathCost + stepCost)
-        )
-    return successors
+        yield Node(successor, parentNode, action, parentNode.pathCost + stepCost)
 
 
 def actionsToNode(node):
@@ -110,19 +106,7 @@ def actionsToNode(node):
     return actions
 
 
-def depth(node):
-    return len(actionsToNode(node))
-
-
-def pathCost(node):
-    return node.pathCost
-
-
-def negativeDepth(node):
-    return -1 * depth(node)
-
-
-def bestFirstSearch(problem, f=pathCost):
+def bestFirstSearch(problem, f=lambda node: node.pathCost):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueueWithFunction(f)
     frontier.push(node)
@@ -156,7 +140,7 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    return bestFirstSearch(problem, f=negativeDepth)
+    return bestFirstSearch(problem, f=lambda node: -1 * len(actionsToNode(node)))
 
 
 def breadthFirstSearch(problem):
@@ -198,7 +182,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return bestFirstSearch(problem, lambda node: node.pathCost + heuristic(node.state, problem))
 
 
 # Abbreviations
