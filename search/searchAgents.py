@@ -40,6 +40,8 @@ from game import Actions
 import util
 import time
 import search
+from dataclasses import dataclass
+from typing import Tuple, List
 
 
 class GoWestAgent(Agent):
@@ -326,6 +328,11 @@ class CornersProblem(search.SearchProblem):
     You must select a suitable state space and successor function
     """
 
+    @dataclass
+    class State:
+        pacman_position: Tuple[int, int]
+        corners_reached: List[bool]
+
     def __init__(self, startingGameState):
         """
         Stores the walls, pacman's starting position and corners.
@@ -341,6 +348,10 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.startState = self.State(
+            pacman_position=self.startingPosition,
+            corners_reached=[False, False, False, False],
+        )
 
     def getStartState(self):
         """
@@ -348,14 +359,14 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.startState
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return all(state.corners_reached)
 
     def getSuccessors(self, state):
         """
@@ -383,7 +394,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            x, y = state.pacman_position
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                corners_reached = state.corners_reached.copy()
+                next_pos = (nextx, nexty)
+                if next_pos in self.corners:
+                    corners_reached[self.corners.index(next_pos)] = True
+                next_state = self.State(
+                    pacman_position=next_pos, corners_reached=corners_reached
+                )
+                successors.append((next_state, action, 1))
         self._expanded += 1  # DO NOT CHANGE
         return successors
 
