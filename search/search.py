@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+
 
 class SearchProblem:
     """
@@ -68,9 +69,11 @@ def tinyMazeSearch(problem):
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
     from game import Directions
+
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 class Node:
     def __init__(self, state, parent, action, pathCost):
@@ -83,14 +86,18 @@ class Node:
     def initNode(state):
         return Node(state, None, None, 0)
 
+
 def successorNodes(problem, parentNode):
     successors = []
     for (successor, action, stepCost) in problem.getSuccessors(parentNode.state):
-        successors.append(Node(successor, parentNode, action, parentNode.pathCost+stepCost))
+        successors.append(
+            Node(successor, parentNode, action, parentNode.pathCost + stepCost)
+        )
     return successors
 
+
 def actionsToNode(node):
-    actions = [ node.action ] if node.action else []
+    actions = [node.action] if node.action else []
     parent = node.parent
 
     while parent:
@@ -102,33 +109,38 @@ def actionsToNode(node):
     actions.reverse()
     return actions
 
+
 def depth(node):
     return len(actionsToNode(node))
+
 
 def pathCost(node):
     return node.pathCost
 
+
 def negativeDepth(node):
     return -1 * depth(node)
+
 
 def bestFirstSearch(problem, f=pathCost):
     node = Node.initNode(problem.getStartState())
     frontier = util.PriorityQueueWithFunction(f)
     frontier.push(node)
-    reached = { node.state: node }
+    reached = {node.state: node}
 
     while not frontier.isEmpty():
         node = frontier.pop()
 
         if problem.isGoalState(node.state):
-            return actionsToNode(node) 
-        
+            return actionsToNode(node)
+
         for child in successorNodes(problem, node):
             s = child.state
             if s not in reached or child.pathCost < reached[s].pathCost:
                 reached[s] = child
                 frontier.push(child)
-    return [] # failure
+    return []  # failure
+
 
 def depthFirstSearch(problem):
     """
@@ -146,15 +158,16 @@ def depthFirstSearch(problem):
     """
     return bestFirstSearch(problem, f=negativeDepth)
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     node = Node.initNode(problem.getStartState())
     if problem.isGoalState(node.state):
         return actionsToNode(node)
-    
-    frontier = util.Queue() # FIFO
+
+    frontier = util.Queue()  # FIFO
     frontier.push(node)
-    reached = [node.state] 
+    reached = [node.state]
 
     while not frontier.isEmpty():
         node = frontier.pop()
@@ -166,11 +179,13 @@ def breadthFirstSearch(problem):
                 reached.append(s)
                 frontier.push(child)
 
-    return [] # failure
+    return []  # failure
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     return bestFirstSearch(problem)
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -178,6 +193,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
+
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
