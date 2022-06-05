@@ -281,8 +281,8 @@ class PacmanGraphics:
     def make_window(self, width, height):
         grid_width = (width - 1) * self.gridSize
         grid_height = (height - 1) * self.gridSize
-        screen_width = 2 * self.gridSize + grid_width
-        screen_height = 2 * self.gridSize + grid_height + INFO_PANE_HEIGHT
+        screen_width = 3 * self.gridSize + grid_width
+        screen_height = 3 * self.gridSize + grid_height + INFO_PANE_HEIGHT
 
         begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, "CS188 Pacman")
 
