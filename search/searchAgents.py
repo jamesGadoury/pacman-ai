@@ -328,10 +328,10 @@ class CornersProblem(search.SearchProblem):
     You must select a suitable state space and successor function
     """
 
-    @dataclass
+    @dataclass(eq=True, frozen=True)
     class State:
         pacman_position: Tuple[int, int]
-        corners_reached: List[bool]
+        corners_reached: Tuple[bool, bool, bool, bool]
 
     def __init__(self, startingGameState):
         """
@@ -350,7 +350,7 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         self.startState = self.State(
             pacman_position=self.startingPosition,
-            corners_reached=[False, False, False, False],
+            corners_reached=(False, False, False, False),
         )
 
     def getStartState(self):
@@ -399,12 +399,12 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
             if not hitsWall:
-                corners_reached = state.corners_reached.copy()
+                corners_reached = list(state.corners_reached)
                 next_pos = (nextx, nexty)
                 if next_pos in self.corners:
                     corners_reached[self.corners.index(next_pos)] = True
                 next_state = self.State(
-                    pacman_position=next_pos, corners_reached=corners_reached
+                    pacman_position=next_pos, corners_reached=tuple(corners_reached)
                 )
                 successors.append((next_state, action, 1))
         self._expanded += 1  # DO NOT CHANGE
@@ -442,8 +442,18 @@ def cornersHeuristic(state, problem):
     corners = problem.corners  # These are the corner coordinates
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
+    score = 0
+
+    for i, corner in enumerate(corners):
+        if state.corners_reached[i]:
+            continue
+        x_p, y_p = state.pacman_position
+        x_c, y_c = corner
+        distance = ((x_p - x_c) ** 2 + (y_p - y_c) ** 2) ** 0.5
+        score += distance
+
     "*** YOUR CODE HERE ***"
-    return 0  # Default to trivial solution
+    return score
 
 
 class AStarCornersAgent(SearchAgent):
