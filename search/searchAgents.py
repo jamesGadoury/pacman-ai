@@ -530,6 +530,12 @@ class AStarFoodSearchAgent(SearchAgent):
         self.searchType = FoodSearchProblem
 
 
+def getMazeDistance(pos_a, pos_b):
+    x_p, y_p = pos_a
+    x_f, y_f = pos_b
+    return ((x_p - x_f) ** 2 + (y_p - y_f) ** 2) ** 0.5
+
+
 def foodHeuristic(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
@@ -560,15 +566,16 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    score = 0
 
-    for foodCoords in foodGrid.asList():
-        x_p, y_p = position
-        x_f, y_f = foodCoords
-        distance = ((x_p - x_f) ** 2 + (y_p - y_f) ** 2) ** 0.5
-        score += distance
+    distances = []
+    distancesFood = [0]
 
-    return score
+    for food in foodGrid.asList():
+        distances.append(getMazeDistance(position, food))
+        for targetFood in foodGrid.asList():
+            distancesFood.append(getMazeDistance(food, targetFood))
+
+    return min(distances) + max(distancesFood) if len(distances) else max(distancesFood)
 
 
 class ClosestDotSearchAgent(SearchAgent):
